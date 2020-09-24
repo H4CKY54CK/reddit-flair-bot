@@ -4,7 +4,7 @@ import json
 import praw
 from urllib.request import urlopen
 import logging
-logging.basicConfig(format="(%(levelname)s) %(asctime)s: %(message)s", filename='/home/hacky/userflairs.log', level=logging.INFO, datefmt="%D %r")
+logging.basicConfig(format="(%(levelname)s) %(asctime)s: %(message)s", filename='/home/hacky/flairbot/userflairs.log', level=logging.INFO, datefmt="%D %r")
 
 URL = 'https://raw.githubusercontent.com/H4CKY54CK/flair-selector/master/flairs.json'
 
