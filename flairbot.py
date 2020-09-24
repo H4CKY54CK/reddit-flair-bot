@@ -2,8 +2,10 @@ import re
 import sys
 import json
 import praw
+import time
 from urllib.request import urlopen
 import logging
+
 logging.basicConfig(format="(%(levelname)s) %(asctime)s: %(message)s", filename='/home/hacky/flairbot/userflairs.log', level=logging.INFO, datefmt="%D %r")
 
 URL = 'https://raw.githubusercontent.com/H4CKY54CK/flair-selector/master/flairs.json'
@@ -15,17 +17,15 @@ def start():
     reddit = praw.Reddit('flairbot')
     subreddit = reddit.subreddit(reddit.config.custom['subreddit'])
     flairs = json.loads(urlopen(URL).read())
-    counter = 0
+    marker = time.time()
     try:
         for msg in reddit.inbox.stream(pause_after=0):
-            counter += 1
-            if counter > 25:
+            if time.time() - marker > 300:
                 try:
                     flairs = json.loads(urlopen(URL).read())
                 except Exception:
-                    logging.warning(f"Failed to update flair data `flairs.json` from Github repo. Continuing with old flair data.")
-                finally:
-                    counter = 0
+                    logging.warning("Failed to fetch flair data from Github repo. Continuing with old flair data. (Most likely a connection error. Occasionally, fine. If this happens a lot, then there's a problem.)")
+                marker = time.time()
             if msg is None:
                 continue
             author = msg.author.name
